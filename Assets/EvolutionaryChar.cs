@@ -1,81 +1,88 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EvolutionaryChar : MonoBehaviour
 {
-    [SerializeField] private MoveJoint headJoint;
-    [SerializeField] private MoveJoint leftArmJoint;
-    [SerializeField] private MoveJoint leftForearmJoint;
-    [SerializeField] private MoveJoint rightArmJoint;
-    [SerializeField] private MoveJoint rightForearmJoint;
-    [SerializeField] private MoveJoint leftLegJoint;
-    [SerializeField] private MoveJoint leftThighJoint;
-    [SerializeField] private MoveJoint rightLegJoint;
-    [SerializeField] private MoveJoint rightThighJoint;
+    [SerializeField] public MoveJoint headJoint;
+    [SerializeField] public MoveJoint leftArmJoint;
+    [SerializeField] public MoveJoint leftForearmJoint;
+    [SerializeField] public MoveJoint rightArmJoint;
+    [SerializeField] public MoveJoint rightForearmJoint;
+    [SerializeField] public MoveJoint leftLegJoint;
+    [SerializeField] public MoveJoint leftThighJoint;
+    [SerializeField] public MoveJoint rightLegJoint;
+    [SerializeField] public MoveJoint rightThighJoint;
 
-    private const int NUM_ACTIONS = 20;
+    public MoveJoint[] joints = new MoveJoint[9];
+
+    private Vector3[] originalPositions;
+    private Quaternion[] originalRotations;
+
+    [SerializeField] private Transform floor;
+    [SerializeField] private Transform flag;
 
     [SerializeField] private Transform cabeca;
 
-    private List<float> heights = new List<float>();
-    private float[] distances = new float[NUM_ACTIONS];
+    public List<float> heights = new List<float>();
+    public List<float> distances = new List<float>();
 
-    private float timeBeforeReset = 5f;
-
-    private float[] headJointActions = new float[NUM_ACTIONS];
-    private float[] leftArmJointActions = new float[NUM_ACTIONS];
-    private float[] leftForearmJointActions = new float[NUM_ACTIONS];
-    private float[] rightArmJointActions = new float[NUM_ACTIONS];
-    private float[] rightForearmJointActions = new float[NUM_ACTIONS];
-    private float[] leftLegJointActions = new float[NUM_ACTIONS];
-    private float[] leftThighJointActions = new float[NUM_ACTIONS];
-    private float[] rightLegJointActions = new float[NUM_ACTIONS];
-    private float[] rightThighJointActions = new float[NUM_ACTIONS];
-
-    private float timer = 0f;
-
-    void Start()
+    void Awake()
     {
-        for (int i = 0; i < NUM_ACTIONS; i++)
-        {
-            // Temp
-            headJointActions[i] = Random.Range(-100f, 100f);
-            leftArmJointActions[i] = Random.Range(-100f, 100f);
-            leftForearmJointActions[i] = Random.Range(-100f, 100f);
-            rightArmJointActions[i] = Random.Range(-100f, 100f);
-            rightForearmJointActions[i] = Random.Range(-100f, 100f);
-            leftLegJointActions[i] = Random.Range(-100f, 100f);
-            leftThighJointActions[i] = Random.Range(-100f, 100f);
-            rightLegJointActions[i] = Random.Range(-100f, 100f);
-            rightThighJointActions[i] = Random.Range(-100f, 100f);
+        // Get the number of child objects
+        int childCount = transform.childCount;
 
-            headJoint.actions.Add(headJointActions[i]);
-            leftArmJoint.actions.Add(leftArmJointActions[i]);
-            leftForearmJoint.actions.Add(leftForearmJointActions[i]);
-            rightArmJoint.actions.Add(rightArmJointActions[i]);
-            rightForearmJoint.actions.Add(rightForearmJointActions[i]);
-            leftLegJoint.actions.Add(leftLegJointActions[i]);
-            leftThighJoint.actions.Add(leftThighJointActions[i]);
-            rightLegJoint.actions.Add(rightLegJointActions[i]);
-            rightThighJoint.actions.Add(rightThighJointActions[i]);
+        // Initialize the array to store original positions
+        originalPositions = new Vector3[childCount];
+        originalRotations = new Quaternion[childCount];
+
+        // Store original local positions
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            originalPositions[i] = child.localPosition;
+            originalRotations[i] = child.localRotation;
         }
+
+        joints[0] = headJoint;
+        joints[1] = leftArmJoint;
+        joints[2] = leftForearmJoint;
+        joints[3] = rightArmJoint;
+        joints[4] = rightForearmJoint;
+        joints[5] = leftLegJoint;
+        joints[6] = leftThighJoint;
+        joints[7] = rightLegJoint;
+        joints[8] = rightThighJoint;
     }
 
-    void Update()
+    public float Height()
     {
-        timer += Time.deltaTime;
+        return Mathf.Abs(cabeca.position.y - floor.position.y);
+    }
 
-        if (timer >= timeBeforeReset/NUM_ACTIONS)
+    public float Distance()
+    {
+        return Mathf.Abs(flag.position.x - cabeca.position.x);
+    }
+
+    public void ResetLists()
+    {
+        heights.Clear();
+        distances.Clear();
+    }
+
+    public void ResetChildrenPositions()
+    {
+        // Get the number of child objects
+        int childCount = transform.childCount;
+
+        // Reset local positions to their original positions
+        for (int i = 0; i < childCount; i++)
         {
-            if (cabeca != null)
-            {
-                // Get the height of the sprite
-                heights.Add(cabeca.position.y);
-
-                // Print or use the objectHeight as needed
-                Debug.Log("Object Height: " + cabeca.position.y);
-            }
+            Transform child = transform.GetChild(i);
+            child.localPosition = originalPositions[i];
+            child.localRotation = originalRotations[i];
         }
     }
 }
