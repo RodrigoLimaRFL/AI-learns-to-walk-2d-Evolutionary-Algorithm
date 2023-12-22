@@ -2,7 +2,7 @@
 - Bernardo Rodrigues Tameirão - 12733212
 - Bernardo Maia Coelho - 12542481
 - Rodrigo de Freitas Lima - 12547510
-- Vinicius Kazuo Fujikawa Noguti 
+- Vinicius Kazuo Fujikawa Noguti - 11803121
 
 # Unity 2D Evolutionary Balancing Project
 
