@@ -1,5 +1,7 @@
 # Unity 2D Evolutionary Balancing Project
 
+![Simulator](img/image.jpg)
+
 ## Overview
 
 [**Video demonstration**](https://www.youtube.com/watch?v=4_hLVEYFEcA)
