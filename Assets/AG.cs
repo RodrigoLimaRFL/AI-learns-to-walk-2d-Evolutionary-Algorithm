@@ -1,15 +1,19 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class AG : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI generationText;
+    [SerializeField] private TextMeshProUGUI fitnessText;
     [SerializeField] private List<EvolutionaryChar> charList;
     private List<float> fitnessValues = new List<float>();
 
     private float mutationAmount = 5f;
+    private int generation = 0;
 
     private const int NUM_ACTIONS = 20;
     private float timeBeforeReset = 3f;
@@ -19,6 +23,8 @@ public class AG : MonoBehaviour
     void Start()
     {
         initPop();
+        generationText.text = "Generation: " + generation;
+        fitnessText.text = "Fitness: 0";
     }
 
     // Update is called once per frame
@@ -28,13 +34,14 @@ public class AG : MonoBehaviour
 
         if(timer >= timeBeforeReset / NUM_ACTIONS)
         {
+            // changes the action of the joints
             if(index < NUM_ACTIONS)
             {
                 Time.timeScale = 0f;
                 foreach (EvolutionaryChar character in charList)
                 {
+                    // saves the height of the character
                     character.heights.Add(character.Height());
-                    character.distances.Add(character.Distance());
 
                     foreach (var joint in character.joints)
                     {
@@ -47,6 +54,7 @@ public class AG : MonoBehaviour
                 timer = 0f;
                 Time.timeScale = 1f;
             }
+            // evolutionary step
             else
             {
                 Time.timeScale = 0f;
@@ -56,11 +64,14 @@ public class AG : MonoBehaviour
                     fitnessValues.Add(fitnessFunction(character));
                 }
                 Elitism();
+                generation++;
+                generationText.text = "Generation: " + generation;
                 resetSimulation();
             }
         }
     }
 
+    // initializes the population with random values
     private void initPop()
     {
         fitnessValues.Clear();
@@ -79,22 +90,21 @@ public class AG : MonoBehaviour
         }   
     }
 
+    // fitness function
+    // values the maximum height of the character
     private float fitnessFunction(EvolutionaryChar character)
     {
         float fitness = 0f;
-        foreach (var height in character.heights)
-        {
-            fitness += (float)height;
-        }
 
-        /*for (int i = 0; i < character.distances.Count; i++)
+        for(int i = 0; i<character.heights.Count; i++)
         {
-            fitness += 2000 / Mathf.Pow((float)character.distances[i] + 1, 2); // valoriza velocidade;
-        }*/
+            fitness += (float)character.heights[i] * (i+1); // values later heights more
+        }
 
         return fitness;
     }
 
+    // Basic elistism implementation
     private void Elitism()
     {
         float maxFitness = fitnessValues[0];
@@ -102,6 +112,7 @@ public class AG : MonoBehaviour
 
         for (int i = 1; i < fitnessValues.Count; i++)
         {
+            // new max fitness
             if (fitnessValues[i] > maxFitness)
             {
                 maxFitness = fitnessValues[i];
@@ -115,8 +126,7 @@ public class AG : MonoBehaviour
             mutationAmount = 5f; // reset mutation
         }
 
-        Debug.Log("Max Fitness: " + maxFitness);
-        Debug.Log("Index Max Fitness: " + indexMaxFitness);
+        fitnessText.text = "Fitness: " + maxFitness;
 
         for (int i = 0; i < charList.Count; i++)
         {
@@ -150,9 +160,11 @@ public class AG : MonoBehaviour
             }
         }
 
+        // increases mutation amount
         mutationAmount += 10f;
     }
 
+    // restarts the characters positions and velocities
     private void resetSimulation()
     {
         timer = 0f;

@@ -22,6 +22,7 @@ public class MoveJoint : MonoBehaviour
         resetJointMovement();
     }
 
+    // Change the speed of the joint
     public void changeJointMovement(float speed)
     {
         JointMotor2D motor = hingeJoint2D.motor;

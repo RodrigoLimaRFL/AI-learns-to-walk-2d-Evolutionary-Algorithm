@@ -21,7 +21,6 @@ public class EvolutionaryChar : MonoBehaviour
     private Quaternion[] originalRotations;
 
     [SerializeField] private Transform floor;
-    [SerializeField] private Transform flag;
 
     [SerializeField] private Transform cabeca;
 
@@ -56,14 +55,10 @@ public class EvolutionaryChar : MonoBehaviour
         joints[8] = rightThighJoint;
     }
 
+    // DeltaY = distance between the character and the floor
     public float Height()
     {
         return Mathf.Abs(cabeca.position.y - floor.position.y);
-    }
-
-    public float Distance()
-    {
-        return Mathf.Abs(flag.position.x - cabeca.position.x);
     }
 
     public void ResetLists()
@@ -72,6 +67,7 @@ public class EvolutionaryChar : MonoBehaviour
         distances.Clear();
     }
 
+    // Resets the position of all child objects
     public void ResetChildrenPositions()
     {
         // Get the number of child objects
