@@ -26,7 +26,7 @@ git clone https://github.com/your-username/your-repository.git
 
 ## Usage
 
-1. Open the Unity scene named [SceneName].
+1. Open the Unity scene.
 
 2. Press the play button to initiate the simulation.
 
