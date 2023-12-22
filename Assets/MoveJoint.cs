@@ -10,15 +10,15 @@ public class MoveJoint : MonoBehaviour
     public float timer = 0f;
 
     private HingeJoint2D hingeJoint2D;
-    private Rigidbody2D rigidbody2D;
+    private Rigidbody2D rb2D;
 
     private float initialRotation = 0f;
 
     void Awake()
     {
         hingeJoint2D = GetComponent<HingeJoint2D>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
-        initialRotation = rigidbody2D.rotation;
+        rb2D = GetComponent<Rigidbody2D>();
+        initialRotation = rb2D.rotation;
         resetJointMovement();
     }
 
@@ -39,8 +39,8 @@ public class MoveJoint : MonoBehaviour
 
     public void ResetRigidbody()
     {
-        rigidbody2D.rotation = initialRotation;
-        rigidbody2D.velocity = Vector2.zero;
-        rigidbody2D.angularVelocity = 0f;
+        rb2D.rotation = initialRotation;
+        rb2D.velocity = Vector2.zero;
+        rb2D.angularVelocity = 0f;
     }
 }
