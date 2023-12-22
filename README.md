@@ -1,5 +1,8 @@
 # Group 
 - Bernardo Rodrigues Tameirão - 12733212
+- Bernardo Maia Coelho - 12542481
+- Rodrigo de Freitas Lima - 12547510
+- Vinicius Kazuo Fujikawa Noguti 
 
 # Unity 2D Evolutionary Balancing Project
 
