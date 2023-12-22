@@ -1,6 +1,6 @@
 # Unity 2D Evolutionary Balancing Project
 
-![Simulator](img/image.jpg)
+![Simulator](img/image.png)
 
 ## Overview
 
