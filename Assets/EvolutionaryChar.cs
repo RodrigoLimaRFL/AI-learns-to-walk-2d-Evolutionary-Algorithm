@@ -85,4 +85,12 @@ public class EvolutionaryChar : MonoBehaviour
             child.localRotation = originalRotations[i];
         }
     }
+
+    public void ResetJoints()
+    {
+        foreach(var joint in joints)
+        {
+            joint.resetJointMovement();
+        }
+    }
 }

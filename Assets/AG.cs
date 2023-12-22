@@ -24,12 +24,13 @@ public class AG : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        timer += Time.fixedDeltaTime;
+        timer += Time.deltaTime;
 
-        if(timer > timeBeforeReset / NUM_ACTIONS)
+        if(timer >= timeBeforeReset / NUM_ACTIONS)
         {
             if(index < NUM_ACTIONS)
             {
+                Time.timeScale = 0f;
                 foreach (EvolutionaryChar character in charList)
                 {
                     character.heights.Add(character.Height());
@@ -37,14 +38,18 @@ public class AG : MonoBehaviour
 
                     foreach (var joint in character.joints)
                     {
+                        joint.resetJointMovement();
                         joint.changeJointMovement(joint.actions[index]);
                     }
                 }
 
                 index++;
+                timer = 0f;
+                Time.timeScale = 1f;
             }
             else
             {
+                Time.timeScale = 0f;
                 index = 0;
                 foreach (EvolutionaryChar character in charList)
                 {
@@ -53,13 +58,13 @@ public class AG : MonoBehaviour
                 Elitism();
                 resetSimulation();
             }
-            timer = 0f;
         }
     }
 
     private void initPop()
     {
         fitnessValues.Clear();
+
         foreach (var character in charList)
         {
             foreach (var joint in character.joints)
@@ -79,9 +84,9 @@ public class AG : MonoBehaviour
         float fitness = 0f;
         foreach (var height in character.heights)
         {
-            fitness += (float) height;
+            fitness += (float)height;
         }
-        
+
         /*for (int i = 0; i < character.distances.Count; i++)
         {
             fitness += 2000 / Mathf.Pow((float)character.distances[i] + 1, 2); // valoriza velocidade;
@@ -119,17 +124,17 @@ public class AG : MonoBehaviour
             {
                 Debug.Log("Crossover");
                 // crossover
-                for (int j = 0; j<9; j++) // 9 = numero de joints
+                for (int j = 0; j < NUM_ACTIONS; j++)
                 {
-                    charList[i].headJoint.actions[j] = (charList[i].headJoint.actions[j] + charList[indexMaxFitness].headJoint.actions[j])/2;
-                    charList[i].leftArmJoint.actions[j] = (charList[i].leftArmJoint.actions[j] + charList[indexMaxFitness].leftArmJoint.actions[j])/2;
-                    charList[i].leftForearmJoint.actions[j] = (charList[i].leftForearmJoint.actions[j] + charList[indexMaxFitness].leftForearmJoint.actions[j])/2;
-                    charList[i].rightArmJoint.actions[j] = (charList[i].rightArmJoint.actions[j] + charList[indexMaxFitness].rightArmJoint.actions[j])/2;
-                    charList[i].rightForearmJoint.actions[j] = (charList[i].rightForearmJoint.actions[j] + charList[indexMaxFitness].rightForearmJoint.actions[j])/2;
-                    charList[i].leftLegJoint.actions[j] = (charList[i].leftLegJoint.actions[j] + charList[indexMaxFitness].leftLegJoint.actions[j])/2;
-                    charList[i].leftThighJoint.actions[j] = (charList[i].leftThighJoint.actions[j] + charList[indexMaxFitness].leftThighJoint.actions[j])/2;
-                    charList[i].rightLegJoint.actions[j] = (charList[i].rightLegJoint.actions[j] + charList[indexMaxFitness].rightLegJoint.actions[j])/2;
-                    charList[i].rightThighJoint.actions[j] = (charList[i].rightThighJoint.actions[j] + charList[indexMaxFitness].rightThighJoint.actions[j])/2;
+                    charList[i].headJoint.actions[j] = (charList[i].headJoint.actions[j] + charList[indexMaxFitness].headJoint.actions[j]) / 2;
+                    charList[i].leftArmJoint.actions[j] = (charList[i].leftArmJoint.actions[j] + charList[indexMaxFitness].leftArmJoint.actions[j]) / 2;
+                    charList[i].leftForearmJoint.actions[j] = (charList[i].leftForearmJoint.actions[j] + charList[indexMaxFitness].leftForearmJoint.actions[j]) / 2;
+                    charList[i].rightArmJoint.actions[j] = (charList[i].rightArmJoint.actions[j] + charList[indexMaxFitness].rightArmJoint.actions[j]) / 2;
+                    charList[i].rightForearmJoint.actions[j] = (charList[i].rightForearmJoint.actions[j] + charList[indexMaxFitness].rightForearmJoint.actions[j]) / 2;
+                    charList[i].leftLegJoint.actions[j] = (charList[i].leftLegJoint.actions[j] + charList[indexMaxFitness].leftLegJoint.actions[j]) / 2;
+                    charList[i].leftThighJoint.actions[j] = (charList[i].leftThighJoint.actions[j] + charList[indexMaxFitness].leftThighJoint.actions[j]) / 2;
+                    charList[i].rightLegJoint.actions[j] = (charList[i].rightLegJoint.actions[j] + charList[indexMaxFitness].rightLegJoint.actions[j]) / 2;
+                    charList[i].rightThighJoint.actions[j] = (charList[i].rightThighJoint.actions[j] + charList[indexMaxFitness].rightThighJoint.actions[j]) / 2;
 
                     // mutation
                     charList[i].headJoint.actions[j] += Random.Range(-mutationAmount, mutationAmount);
@@ -156,6 +161,12 @@ public class AG : MonoBehaviour
         {
             character.ResetLists();
             character.ResetChildrenPositions();
+            character.ResetJoints();
+            foreach (var joint in character.joints)
+            {
+                joint.ResetRigidbody();
+            }
         }
+        Time.timeScale = 1f;
     }
 }
