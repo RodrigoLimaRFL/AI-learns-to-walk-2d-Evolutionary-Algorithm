@@ -1,8 +1,16 @@
+# Group 
+- Bernardo Rodrigues Tameirão - 12733212
+- Bernardo Maia Coelho - 12542481
+- Rodrigo de Freitas Lima - 12547510
+- Vinicius Kazuo Fujikawa Noguti - 11803121
+
 # Unity 2D Evolutionary Balancing Project
+
+![Simulator](img/image.png)
 
 ## Overview
 
-[Include a video demonstration link or embed if available.]
+[**Video demonstration**](https://www.youtube.com/watch?v=4_hLVEYFEcA)
 
 This Unity project harnesses evolutionary algorithms to instruct a 2D body in maintaining balance. The primary goal is to delve into and apply evolutionary algorithms within the context of a straightforward physics simulation.
 
