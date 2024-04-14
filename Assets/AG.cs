@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.IO;
 
 public class AG : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class AG : MonoBehaviour
     [SerializeField] private TextMeshProUGUI fitnessText;
     [SerializeField] private List<EvolutionaryChar> charList;
     private List<float> fitnessValues = new List<float>();
+
+    private string filePath;
+    private string fileName = "fitness.txt";
 
     private float mutationAmount = 5f;
     private int generation = 0;
@@ -25,6 +29,7 @@ public class AG : MonoBehaviour
         initPop();
         generationText.text = "Generation: " + generation;
         fitnessText.text = "Fitness: 0";
+        filePath = Application.dataPath + "/" + fileName;
     }
 
     // Update is called once per frame
@@ -126,6 +131,10 @@ public class AG : MonoBehaviour
             mutationAmount = 5f; // reset mutation
         }
 
+        using (StreamWriter writer = File.AppendText(filePath))
+        {
+            writer.WriteLine(maxFitness.ToString());
+        }
         fitnessText.text = "Fitness: " + maxFitness;
 
         for (int i = 0; i < charList.Count; i++)
